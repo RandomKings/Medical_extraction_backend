@@ -1,4 +1,3 @@
-
 def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantung_data.csv'):
 	import pandas as pd
 	import numpy as np
@@ -302,3 +301,4 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 	})
 
 	df.to_csv(output_csv_path, index=False)
+
