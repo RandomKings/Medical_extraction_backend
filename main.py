@@ -51,8 +51,9 @@ def handle_file(file: UploadFile, process_function, prefix: str):
 
 # Jantung extraction endpoint
 @app.post("/Extract-Jantung")
-async def extract_jantung(file: UploadFile = File(...)):
+def extract_jantung(file: UploadFile = File(...)):
     return handle_file(file, process_jantung_data, "jantung")
+
 
 
 
