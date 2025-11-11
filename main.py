@@ -1,9 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from jantung import process_jantung_data
-from ranap import process_ranap_data
-from resumemedis import process_resumemedis_data
 import os
 import io
 
@@ -21,18 +18,32 @@ app.add_middleware(
 def read_root():
     return {"message": "Extraction APIs"}
 
+# Jantung extraction endpoint
 @app.post("/Extract-Jantung")
 async def extract_jantung(file: UploadFile = File(...)):
     try:
-        # Simulating processing
-        file_contents = await file.read()
-        logging.info(f"File {file.filename} uploaded successfully with size {len(file_contents)} bytes.")
+        input_path = f"uploaded_{file.filename}"
+        with open(input_path, "wb") as f:
+            f.write(await file.read())
+        output_path = f"processed_jantung_{file.filename}"
         
-        # Instead of calling jantung.py, just simulate processing and return a success response
-        return JSONResponse({"status": "success", "message": "File processed successfully."})
-    except Exception as e:
-        logging.error(f"Error processing file: {str(e)}")
-        return JSONResponse({"status": "error", "error": str(e)}, status_code=500})
+        # Process the file
+        process_jantung_data(input_path, output_path)
+        
+        # Clean up input file
+        os.remove(input_path)
 
+        # Read the processed CSV file into memory
+        with open(output_path, mode="r", encoding="utf-8") as file:
+            csv_content = file.read()
+
+        # Clean up processed file
+        os.remove(output_path)
+
+        # Return the processed CSV file as a download
+        return StreamingResponse(io.StringIO(csv_content), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename={output_path}"})
+
+    except Exception as e:
+        return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
 
 
