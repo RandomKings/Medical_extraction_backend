@@ -6,6 +6,7 @@ from ranap import process_ranap_data
 from resumemedis import process_resumemedis_data
 import os
 import io
+import tempfile
 
 app = FastAPI(title="Extraction APIs")
 
@@ -25,26 +26,24 @@ def read_root():
 @app.post("/Extract-Jantung")
 async def extract_jantung(file: UploadFile = File(...)):
     try:
-        input_path = f"uploaded_{file.filename}"
-        with open(input_path, "wb") as f:
-            f.write(await file.read())
-        output_path = f"processed_jantung_{file.filename}"
-        
+        # Create a temporary directory to store the uploaded file
+        with tempfile.NamedTemporaryFile(delete=False, dir='/tmp') as tmp_file:
+            input_path = tmp_file.name
+            with open(input_path, "wb") as f:
+                f.write(await file.read())
+
+        # Define the output path in the same temporary directory
+        output_path = input_path.replace("uploaded_", "processed_")
+
         # Process the file
         process_jantung_data(input_path, output_path)
         
-        # Clean up input file
-        os.remove(input_path)
-
-        # Read the processed CSV file into memory
+        # Read the processed file into memory
         with open(output_path, mode="r", encoding="utf-8") as file:
             csv_content = file.read()
 
-        # Clean up processed file
-        os.remove(output_path)
-
         # Return the processed CSV file as a download
-        return StreamingResponse(io.StringIO(csv_content), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename={output_path}"})
+        return StreamingResponse(io.StringIO(csv_content), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename={os.path.basename(output_path)}"})
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
@@ -104,3 +103,4 @@ async def extract_resumemedis(file: UploadFile = File(...)):
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+
