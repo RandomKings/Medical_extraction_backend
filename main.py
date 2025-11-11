@@ -22,7 +22,6 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 	from google.genai import types
 	import re, os, time, json, ast
 	from datetime import datetime
-	from dotenv import load_dotenv
 
 	API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -347,6 +346,7 @@ async def extract_jantung(file: UploadFile = File(...)):
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+
 
 
 
