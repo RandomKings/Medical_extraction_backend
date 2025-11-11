@@ -1,11 +1,11 @@
+import os
+import io
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from jantung import process_jantung_data
 from ranap import process_ranap_data
 from resumemedis import process_resumemedis_data
-import os
-import io
 
 app = FastAPI()
 
@@ -21,86 +21,45 @@ app.add_middleware(
 def read_root():
     return {"message": "Extraction APIs"}
 
-# Jantung extraction endpoint
-@app.post("/Extract-Jantung")
-async def extract_jantung(file: UploadFile = File(...)):
+# Helper function to handle file processing
+def handle_file(file: UploadFile, process_function, prefix: str):
     try:
-        input_path = f"uploaded_{file.filename}"
+        # Save the uploaded file to the /tmp directory in Vercel
+        input_path = f"/tmp/uploaded_{file.filename}"
         with open(input_path, "wb") as f:
-            f.write(await file.read())
-        output_path = f"processed_jantung_{file.filename}"
+            f.write(file.file.read())
         
-        # Process the file
-        process_jantung_data(input_path, output_path)
+        # Set the output path for the processed file in /tmp directory
+        output_path = f"/tmp/processed_{prefix}_{file.filename}"
         
-        # Clean up input file
-        os.remove(input_path)
+        # Process the file using the corresponding function
+        process_function(input_path, output_path)
 
-        # Read the processed CSV file into memory
+        # Read the processed file
         with open(output_path, mode="r", encoding="utf-8") as file:
             csv_content = file.read()
 
-        # Clean up processed file
+        # Clean up the temporary files
+        os.remove(input_path)
         os.remove(output_path)
 
-        # Return the processed CSV file as a download
+        # Return the processed CSV file as a response
         return StreamingResponse(io.StringIO(csv_content), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename={output_path}"})
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+
+# Jantung extraction endpoint
+@app.post("/Extract-Jantung")
+async def extract_jantung(file: UploadFile = File(...)):
+    return handle_file(file, process_jantung_data, "jantung")
 
 # Ranap extraction endpoint
 @app.post("/Extract-Ranap")
 async def extract_ranap(file: UploadFile = File(...)):
-    try:
-        input_path = f"uploaded_{file.filename}"
-        with open(input_path, "wb") as f:
-            f.write(await file.read())
-        output_path = f"processed_ranap_{file.filename}"
-        
-        # Process the file
-        process_ranap_data(input_path, output_path)
-
-        # Clean up input file
-        os.remove(input_path)
-
-        # Read the processed CSV file into memory
-        with open(output_path, mode="r", encoding="utf-8") as file:
-            csv_content = file.read()
-
-        # Clean up processed file
-        os.remove(output_path)
-
-        # Return the processed CSV file as a download
-        return StreamingResponse(io.StringIO(csv_content), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename={output_path}"})
-
-    except Exception as e:
-        return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+    return handle_file(file, process_ranap_data, "ranap")
 
 # Resume Medis extraction endpoint
 @app.post("/Extract-ResumeMedis")
 async def extract_resumemedis(file: UploadFile = File(...)):
-    try:
-        input_path = f"uploaded_{file.filename}"
-        with open(input_path, "wb") as f:
-            f.write(await file.read())
-        output_path = f"processed_resumemedis_{file.filename}"
-        
-        # Process the file
-        process_resumemedis_data(input_path, output_path)
-
-        # Clean up input file
-        os.remove(input_path)
-
-        # Read the processed CSV file into memory
-        with open(output_path, mode="r", encoding="utf-8") as file:
-            csv_content = file.read()
-
-        # Clean up processed file
-        os.remove(output_path)
-
-        # Return the processed CSV file as a download
-        return StreamingResponse(io.StringIO(csv_content), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename={output_path}"})
-
-    except Exception as e:
-        return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+    return handle_file(file, process_resumemedis_data, "resumemedis")
