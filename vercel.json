@@ -2,13 +2,13 @@
   "version": 2,
   "builds": [
     {
-      "src": "main.py",  // Python entry point (adjust according to your project)
+      "src": "main.py", 
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",    // Routes all requests to your FastAPI app
+      "src": "/(.*)",
       "dest": "/main.py"
     }
   ]
