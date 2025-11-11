@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from jantung import process_jantung_data
+import jantung
 from ranap import process_ranap_data
 from resumemedis import process_resumemedis_data
 import os
@@ -31,7 +31,7 @@ async def extract_jantung(file: UploadFile = File(...)):
         output_path = f"processed_jantung_{file.filename}"
         
         # Process the file
-        process_jantung_data(input_path, output_path)
+        jantung.process_jantung_data(input_path, output_path)
         
         # Clean up input file
         os.remove(input_path)
@@ -48,6 +48,7 @@ async def extract_jantung(file: UploadFile = File(...)):
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+
 
 
 
