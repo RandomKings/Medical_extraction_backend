@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+pandas = "*"
+numpy = "*"
+google-genai = "*"
+python-dotenv = "*"
+
+[requires]
+python_version = "3.11"
