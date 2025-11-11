@@ -8,13 +8,6 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 	from datetime import datetime
 	from dotenv import load_dotenv
 
-	load_dotenv(".env")
-	API_KEY = os.getenv("GEMINI_API_KEY")
-
-	client = genai.Client(
-		api_key=API_KEY
-	)
-
 	df = pd.read_csv(input_csv_path)
 
 	def is_high_index_diagnosa(col):
@@ -301,4 +294,5 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 	})
 
 	df.to_csv(output_csv_path, index=False)
+
 
