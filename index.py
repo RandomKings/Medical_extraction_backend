@@ -7,7 +7,7 @@ from resumemedis import process_resumemedis_data
 import os
 import io
 
-app = FastAPI(title="Extraction APIs")
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -104,3 +104,4 @@ async def extract_resumemedis(file: UploadFile = File(...)):
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+
