@@ -24,7 +24,6 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 	from datetime import datetime
 	from dotenv import load_dotenv
 
-	load_dotenv(".env")
 	API_KEY = os.getenv("GEMINI_API_KEY")
 
 	client = genai.Client(
@@ -316,7 +315,6 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 		'P'  : 'detailPengobatan',
 	})
 
-	df.to_csv(output_csv_path, index=False)
 
 @app.get("/")
 def read_root():
@@ -349,6 +347,7 @@ async def extract_jantung(file: UploadFile = File(...)):
 
     except Exception as e:
         return JSONResponse({"status": "error", "error": str(e)}, status_code=500)
+
 
 
 
