@@ -1,12 +1,25 @@
-@app.post("/Extract-Jantung")
-async def extract_jantung(file: UploadFile = File(...)):
+import pandas as pd
+import json
+import logging
+
+# Dummy function simulating data processing
+def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantung_data.csv'):
     try:
-        # Simulating processing
-        file_contents = await file.read()
-        logging.info(f"File {file.filename} uploaded successfully with size {len(file_contents)} bytes.")
+        # Simulating reading CSV file and processing
+        df = pd.read_csv(input_csv_path)
         
-        # Instead of calling jantung.py, just simulate processing and return a success response
-        return JSONResponse({"status": "success", "message": "File processed successfully."})
+        # Log some basic information about the DataFrame
+        logging.info(f"DataFrame loaded with {len(df)} rows and {len(df.columns)} columns.")
+        
+        # Simulating processing and modifying the DataFrame
+        df['processed_column'] = "Processed"
+        
+        # Simulate saving to an output file (but we won't actually write to a file for now)
+        logging.info(f"Data processed and saved to {output_csv_path}.")
+        
+        # Simulating a successful processing output (in real case, you would save the DataFrame)
+        return {"status": "success", "message": "File processed successfully"}
+    
     except Exception as e:
         logging.error(f"Error processing file: {str(e)}")
-        return JSONResponse({"status": "error", "error": str(e)}, status_code=500})
+        return {"status": "error", "error": str(e)}
