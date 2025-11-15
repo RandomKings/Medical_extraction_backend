@@ -13,10 +13,6 @@ A comprehensive data processing solution featuring a **FastAPI backend** and **H
 - [Usage](#usage)
 - [Processing Pipeline](#processing-pipeline)
 - [Screenshots](#screenshots)
-- [Configuration](#configuration)
-- [Dependencies](#dependencies)
-- [License](#license)
-
 ---
 
 ## Overview
