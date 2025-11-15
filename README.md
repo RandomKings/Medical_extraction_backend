@@ -23,16 +23,6 @@ A comprehensive data processing solution featuring a **FastAPI backend** and **H
 
 The Medical CSV Extraction System automates the conversion of raw electronic medical record (EMR) exports into clean, structured datasets. By utilizing the Google Gemini API for intelligent data extraction, the system removes unnecessary EMR metadata, normalizes medical values, and produces standardized output suitable for analysis and reporting.
 
-## Features
-
-- **Multi-format Support**: Processes three distinct medical record types
-- **AI-Powered Extraction**: Leverages Google Gemini API for intelligent data parsing
-- **Data Normalization**: Standardizes units, formats, and medical terminology
-- **Privacy-Focused**: Automatically removes personal identifiers
-- **RESTful API**: Well-documented FastAPI backend with Swagger UI
-- **Zero-Build Frontend**: Simple HTML/JS interface requiring no compilation
-- **Flexible Deployment**: Supports both local and cloud deployment options
-
 ## Supported Record Types
 
 ### 1. Jantung (Cardiac/Outpatient Examination)
@@ -146,7 +136,6 @@ vercel --prod
 6. **Access the API:**
    - **API Base URL**: `http://127.0.0.1:8000`
    - **Interactive Documentation**: `http://127.0.0.1:8000/docs`
-   - **Alternative Documentation**: `http://127.0.0.1:8000/redoc`
 
 #### Option B: Production Deployment (Vercel)
 
