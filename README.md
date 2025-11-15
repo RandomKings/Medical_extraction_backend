@@ -40,6 +40,7 @@ Each processor module removes unnecessary EMR noise, normalizes values, and uses
 1. Open the frontend GitHub repository  
 2. Download the HTML file 
 3. Open in any browser — no build step required
+
 Note - When running backend locally, change the api url in the HTML to local.
 ### Option B — Deploy the frontend
 Upload the HTML files to:
