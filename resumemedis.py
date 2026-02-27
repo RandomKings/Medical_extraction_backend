@@ -106,7 +106,7 @@ def process_resumemedis_data(input_csv_path, output_csv_path):
             """
 
         try:
-            model = "gemini-2.0-flash"
+            model = "gemini-2.5-flash"
             contents = [
                 types.Content(
                     role="user",
@@ -204,3 +204,4 @@ def process_resumemedis_data(input_csv_path, output_csv_path):
     df = df[[col for col in df.columns if not re.match(pattern, col)]]
 
     df.to_csv(output_csv_path, index=False)
+
