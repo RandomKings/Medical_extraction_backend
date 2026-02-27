@@ -139,7 +139,7 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 			\"{raw_text.strip()}\"
 			"""
 		try:
-			model = "gemini-2.0-flash"
+			model = "gemini-2.5-flash"
 			contents = [
 				types.Content(
 					role="user",
@@ -200,7 +200,7 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 			\"{raw_text.strip()}\"
 			"""
 		try:
-			model = "gemini-2.0-flash"
+			model = "gemini-2.5-flash"
 			contents = [
 				types.Content(
 					role="user",
@@ -302,3 +302,4 @@ def process_jantung_data(input_csv_path, output_csv_path='final_extracted_jantun
 	})
 
 	df.to_csv(output_csv_path, index=False)
+
